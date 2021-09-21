@@ -1,7 +1,7 @@
 /*
     * @author : Yan Nascimento
     * @date : 15/09/2021
-    * @description : example with BEFORE INSERT. It allows to create a new account only if these fields have the specific values
+    * @description : BEFORE INSERT that allows us to create a new account only if some fields have specific values
     * @log : 15/09/2021 : creation
 */
 
