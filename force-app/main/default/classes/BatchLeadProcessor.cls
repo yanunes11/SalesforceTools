@@ -5,7 +5,7 @@
     @log : 06/10/2021 : creation
  */
 
-public class LeadProcessor implements Database.Batchable<sObject> {
+public class BatchLeadProcessor implements Database.Batchable<sObject> {
     public Integer recordsProcessed = 0;
     //Retrieve the Lead values
     public Database.QueryLocator start(Database.BatchableContext bc) {
@@ -23,8 +23,14 @@ public class LeadProcessor implements Database.Batchable<sObject> {
         }
         UPDATE leads;
     }
-    //is shows the quantity of changed records
+    //is shows informations of batch apex
     public void finish (Database.BatchableContext bc) {
+        AsyncApexJob job = [
+            SELECT Id, Status, NumberOfErrors, JobItemsProcessed, TotalJobItems, CreatedBy.Email
+            FROM AsyncApexJob
+            WHERE Id = :bc.getJobId()
+        ];
         System.debug('recordsProcessed: '+recordsProcessed);
+        System.debug('Job Information: '+job);
     }
 }

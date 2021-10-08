@@ -1,5 +1,5 @@
 @isTest
-public class LeadProcessorTest {
+public class BatchLeadProcessorTest {
     @TestSetup
     static void setup(){
         List<Lead> leads = New List<Lead>();
@@ -13,10 +13,10 @@ public class LeadProcessorTest {
         INSERT leads;
     }
     @isTest
-    public static void LeadProcessorTest() {
+    public static void BatchLeadProcessorTest() {
         Test.startTest();
-        LeadProcessor ldProcessor = new LeadProcessor();
-        Database.executeBatch(ldProcessor);
+        BatchLeadProcessor ldProcessor = new BatchLeadProcessor();
+        Id batchId = Database.executeBatch(ldProcessor);
         Test.stopTest();
         List<Lead> totalLeads = [
             SELECT LeadSource
