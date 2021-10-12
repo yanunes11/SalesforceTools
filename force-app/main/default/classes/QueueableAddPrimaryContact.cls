@@ -1,12 +1,10 @@
-<<<<<<< HEAD
 /**
     @author : Yan Nascimento
     @date : 09/10/2021
     @description : assign contacts to related accounts using clone
     @log : 09/10/2021 : creation
  */
-=======
->>>>>>> ece16f982b991b1370321290f9af551075dd5e13
+
 public class QueueableAddPrimaryContact implements Queueable {
     private Contact contact;
     private String state;
