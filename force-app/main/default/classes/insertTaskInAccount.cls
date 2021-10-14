@@ -1,5 +1,5 @@
 /**
-     @name : insertTaskInAccount
+     @name : InsertTaskInAccount
      @author : Yan Nascimento
      @date : 06/08/2021
      @description : insert a new task in an account when Rating field is updated
