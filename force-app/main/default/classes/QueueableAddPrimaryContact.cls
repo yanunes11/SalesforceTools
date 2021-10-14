@@ -1,7 +1,7 @@
 /**
     @author : Yan Nascimento
     @date : 09/10/2021
-    @description : assign contacts to related accounts using clone
+    @description : Queueabe apex to assign contacts to related accounts using clone
     @log : 09/10/2021 : creation
  */
 

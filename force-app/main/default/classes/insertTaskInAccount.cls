@@ -6,10 +6,10 @@
      @log : 06/08/2021 - Yan Nascimento
  */
 
-public with sharing class insertTaskInAccount {
-    public static void insertTaskInAccount(List<Account> Accountlist) {
+public with sharing class InsertTaskInAccount {
+    public static void InsertTaskInAccount(List<Account> accountlist) {
         List<Task> tk = new List<Task>();
-        for (Account acct : Accountlist) {
+        for (Account acct : accountlist) {
             if (acct.Rating == 'Hot') {
                 Task taskList = new Task();
                 taskList.WhatId = acct.Id;
