@@ -13,6 +13,18 @@ public class testSchemaMode {
             system.debug('Object name is: ' +ob.getDescribe().getName()+ ' fields are' +ob.getDescribe().fields.getMap().values());
         }
     }
+    //retrieve the field names of an Object
+    public static void retrieveFieldName() {
+	List<String> addrLayout = new List<String>();
+	Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+	Schema.SObjectType leadSchema = schemaMap.get('OpportunityServiceItem__c');
+	Map<String, Schema.SObjectField> fieldMap = leadSchema.getDescribe().fields.getMap();
+	for (String fieldName: fieldMap.keySet()) {  
+	    addrLayout.add(fieldMap.get(fieldName).getDescribe().getLabel());
+	}
+	system.debug(addrLayout);
+    }
+
     //show all the fields a specific object.you just need to replace the account with the other object
     public static void showAllFieldsOfObject() {
         schema.DescribeSObjectResult a_desc = Account.sObjectType.getDescribe();
