@@ -4,7 +4,7 @@
     @description : retrieve email information to create a task
     @log : 20/12/2021 : creation
  */
-global class myHandler implements Messaging.InboundEmailHandler {
+global class EmailService implements Messaging.InboundEmailHandler {
     
     global Messaging.InboundEmailResult handleInboundEmail(Messaging.InboundEmail email, Messaging.InboundEnvelope envelope) {
         Messaging.InboundEmailResult result = new Messaging.InboundEmailresult();
