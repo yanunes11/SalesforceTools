@@ -11,23 +11,15 @@ public with sharing class mapTools {
         List<Account> accounts = [
             SELECT BillingState, Name
             FROM Account
+            WHERE BillingState != NULL
         ];
-        Set<String> stateList = new Set<String>();
         for (Account acct : accounts) {
-            if (String.isNotBlank(acct.BillingState)) {
-                stateList.add(acct.BillingState);
-            }
+            List<Account> accList = 
+                (accountMap.containsKey(acct.BillingState)) ? accountMap.get(acct.BillingState) : new List<Account>();
+            accList.add(acct);
+            accountMap.put(acct.BillingState, accList);
         }
-        for (String ls : stateList) {
-            List<Account> master = new List<Account>();
-            for (Account acct : accounts) {
-                if (ls == acct.BillingState) {
-                    master.add(acct);
-                }
-            }
-            accountMap.put(ls, master);
-        }
-        for (String ls : stateList) {
+        for (String ls : accountMap.keySet()) {
             system.debug('>>>>> accountMap.get('+ls+'): '+accountMap.get(ls));
         }
     }
