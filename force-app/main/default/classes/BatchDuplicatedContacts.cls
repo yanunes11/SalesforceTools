@@ -5,11 +5,17 @@
     @log : 20/12/2021 : creation
  */
 
-public with sharing class BatchDuplicatedContacts implements Database.Batchable<sObject> {
+public with sharing class BatchDuplicatedContacts implements Database.Batchable<sObject>, Database.Stateful {
     private Integer recordsProcessed = 0;
     public String query;
+    public String preQuery;
     public Database.QueryLocator start(Database.BatchableContext bc) {
-        query = 'SELECT Email FROM Contact';
+        preQuery = 'SELECT COUNT(Id) qty, Email FROM Contact WHERE Email != NULL GROUP BY Email HAVING COUNT(Id) > 1';
+        Set<String> emails = new Set<String>();
+        for (AggregateResult ag : Database.query(preQuery)) {
+            emails.add((String)ag.get('Email'));
+        }
+        query = 'SELECT Email FROM Contact WHERE Email IN :emails';
         return Database.getQueryLocator(query);
     }
 
@@ -26,7 +32,7 @@ public with sharing class BatchDuplicatedContacts implements Database.Batchable<
             if (ctList.size() > 1) {
                 for (Integer i = 1; i < ctList.size(); i++) {
                     if (ctList[0].Id != ctList[i].Id) {
-                        Database.MergeResult results = Database.merge(ctList[0], ctList[i].Id, false);
+                        Database.merge(ctList[0], ctList[i].Id, false);
                     }
                 }
             }
