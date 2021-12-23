@@ -27,24 +27,19 @@ public with sharing class BatchDuplicatedContacts implements Database.Batchable<
                 for (Integer i = 1; i < ctList.size(); i++) {
                     if (ctList[0].Id != ctList[i].Id) {
                         Database.MergeResult results = Database.merge(ctList[0], ctList[i].Id, false);
-                        System.debug('results:____'+results.getMergedRecordIds());
-                        System.debug('ctList['+i+'].Id: ('+ctList[i].Id+')');
                     }
                 }
             }
         }
-        for (String ls : contactMap.keySet()) {
-            System.debug('contactMap.get('+ls+'): '+contactMap.get(ls));
-        }
     }
 
     public void finish(Database.BatchableContext bc) {
-        // AsyncApexjob job = [
-        //     SELECT Id, Status, NumberOfErrors, JobItemsProcessed, TotalJobItems, CreatedBy.Email
-        //     FROM AsyncApexJob
-        //     WHERE Id = :bc.getJobId()
-        // ];
-        // System.debug('recordsProcessed: '+this.recordsProcessed);
-        // System.debug('Job Information: '+job);
+        AsyncApexjob job = [
+            SELECT Id, Status, NumberOfErrors, JobItemsProcessed, TotalJobItems, CreatedBy.Email
+            FROM AsyncApexJob
+            WHERE Id = :bc.getJobId()
+        ];
+        System.debug('recordsProcessed: '+this.recordsProcessed);
+        System.debug('Job Information: '+job);
     }
 }

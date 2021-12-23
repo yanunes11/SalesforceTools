@@ -23,5 +23,10 @@ public with sharing class BatchDuplicatedContactsTst {
         BatchDuplicatedContacts b = new BatchDuplicatedContacts();
         Id batchId = Database.executeBatch(b);
         Test.stopTest();
+        List<Contact> ct = [
+            SELECT Id
+            FROM Contact
+        ];
+        System.assertEquals(3, ct.size());
     }
 }
