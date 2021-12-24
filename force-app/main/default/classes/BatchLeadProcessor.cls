@@ -5,7 +5,7 @@
     @log : 06/10/2021 : creation
  */
 
-public class BatchLeadProcessor implements Database.Batchable<sObject> {
+public class BatchLeadProcessor implements Database.Batchable<sObject>, Database.Stateful {
     public Integer recordsProcessed = 0;
     //Retrieve the Lead values
     public Database.QueryLocator start(Database.BatchableContext bc) {
@@ -19,7 +19,7 @@ public class BatchLeadProcessor implements Database.Batchable<sObject> {
         for (Lead ld : scope) {
             ld.LeadSource = 'Dreamforce';
             leads.add(ld);
-            recordsProcessed = recordsProcessed + 1;
+            recordsProcessed += 1;
         }
         UPDATE leads;
     }
