@@ -3,7 +3,7 @@ public with sharing class BatchDuplicatedContactsTst {
     @TestSetup
     static void setup() {
         List<Contact> ctList = new List<Contact>();
-        for (Integer i = 0; i < 200; i++) {
+        for (Integer i = 0; i < 100; i++) {
             Contact ct = new Contact();
             ct.FirstName = 'test' + String.valueOf(i);
             ct.Lastname = 'lastTest' + String.valueOf(i);
@@ -18,15 +18,15 @@ public with sharing class BatchDuplicatedContactsTst {
     }
 
     @isTest
-    static void duplicateContactTest() {
+    static void duplicateContactTest() {    
         Test.startTest();
         BatchDuplicatedContacts b = new BatchDuplicatedContacts();
-        Id batchId = Database.executeBatch(b);
+        Id batchId = Database.executeBatch(b, 100);
         Test.stopTest();
         List<Contact> ct = [
             SELECT Id
             FROM Contact
         ];
-        System.assertEquals(101, ct.size());
+        System.assertEquals(51, ct.size());
     }
 }
