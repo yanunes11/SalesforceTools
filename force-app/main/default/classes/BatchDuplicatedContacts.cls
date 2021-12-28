@@ -9,9 +9,11 @@ public with sharing class BatchDuplicatedContacts implements Database.Batchable<
     private Integer recordsProcessed = 0;
     public String query;
     public String preQuery;
+    public Set<String> emails;
+    public List<Contact> allContacts;
     public Database.QueryLocator start(Database.BatchableContext bc) {
         preQuery = 'SELECT COUNT(Id) qty, Email FROM Contact WHERE Email != NULL GROUP BY Email HAVING COUNT(Id) > 1';
-        Set<String> emails = new Set<String>();
+        emails = new Set<String>();
         for (AggregateResult ag : Database.query(preQuery)) {
             emails.add((String)ag.get('Email'));
         }
@@ -26,6 +28,14 @@ public with sharing class BatchDuplicatedContacts implements Database.Batchable<
             ctList.add(sp);
             contactMap.put(sp.Email, ctList);
             recordsProcessed += 1;
+        }
+        allContacts = [SELECT Id, Email FROM Contact WHERE Email In :contactMap.keySet() AND Id NOT IN :scope];
+        for (Contact ct : allContacts) {
+            List<Contact> ctList = contactMap.containsKey(ct.Email) ? contactMap.get(ct.Email) : new List<Contact>();
+            if (ctList.size() <= 4) {
+                ctList.add(ct);
+                contactMap.put(ct.Email, ctList);
+            }
         }
         for (String ls : contactMap.keySet()) {
             List<Contact> ctList = contactMap.get(ls);
