@@ -25,19 +25,9 @@ public with sharing class BatchDuplicatedContacts implements Database.Batchable<
         Map<String, List<Contact>> contactMap = new Map<String, List<Contact>>();
         for (Contact sp : scope) {
             List<Contact> ctList = contactMap.containsKey(sp.Email) ? contactMap.get(sp.Email) : new List<Contact>();
-            if (ctList.size() <= 4) {
-                ctList.add(sp);
-                contactMap.put(sp.Email, ctList);
-                recordsProcessed += 1;
-            }
-        }
-        allContacts = [SELECT Id, Email FROM Contact WHERE Email IN :contactMap.keySet() AND Id NOT IN :scope];
-        for (Contact ct : allContacts) {
-            List<Contact> ctList = contactMap.containsKey(ct.Email) ? contactMap.get(ct.Email) : new List<Contact>();
-            if (ctList.size() <= 4) {
-                ctList.add(ct);
-                contactMap.put(ct.Email, ctList);
-            }
+            ctList.add(sp);
+            contactMap.put(sp.Email, ctList);
+            recordsProcessed += 1;
         }
         allContacts = [SELECT Id, Email FROM Contact WHERE Email In :contactMap.keySet() AND Id NOT IN :scope];
         for (Contact ct : allContacts) {
