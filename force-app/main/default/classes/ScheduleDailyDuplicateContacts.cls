@@ -5,9 +5,9 @@
     @log : 28/12/2021 : creation
  */
 
-public with sharing class ScheduleDailyDuplicateContacts implements Schedulable {
-    public void execute(SchedulableContext ctx) {
+global with sharing class ScheduleDailyDuplicateContacts implements Schedulable {
+    global void execute(SchedulableContext ctx) {
         BatchDuplicatedContacts b = new BatchDuplicatedContacts();
-        Id batchId = Database.executeBatch(b, 100);
+        Id batchId = Database.executeBatch(b, 50);
     }
 }

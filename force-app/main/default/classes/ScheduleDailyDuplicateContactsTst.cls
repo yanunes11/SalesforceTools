@@ -22,10 +22,12 @@ public with sharing class ScheduleDailyDuplicateContactsTst {
         Test.startTest();
         String jobId = System.schedule('ScheduleDuplicatedContactsBatch', cronExp, new ScheduleDailyDuplicateContacts());
         Test.stopTest();
-        List<Contact> ct = [
-            SELECT Id
-            FROM Contact
+        //ATTENTION: You cannot test a batch invoked by a schedule apex. Then only can test if a shedule was created
+        List<AsyncApexJob> jobsScheduled = [
+            SELECT Id, ApexClassId, ApexClass.Name, Status
+            FROM AsyncApexJob
+            WHERE JobType = 'ScheduledApex'
         ];
-        System.assertEquals(51, ct.size());
+        System.assertEquals(1, jobsScheduled.size());
     }
 }
