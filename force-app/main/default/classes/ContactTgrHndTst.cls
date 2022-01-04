@@ -2,20 +2,44 @@
 public with sharing class ContactTgrHndTst {
     @TestSetup
     static void setup(){
-        Contact ct = new Contact();
-        ct.FirstName = 'Yan';
-        ct.LastName = 'Nascimento';
-        ct.Email = 'yannascimento@gmail.com';
-        insert ct;
+        List<Contact> contacts = new List<Contact>();
+        for (Integer i = 0; i < 3; i++) {
+            Contact ct = new Contact();
+            ct.FirstName = 'Yan';
+            ct.LastName = 'Nascimento' + String.valueOf(i);
+            ct.Email = 'yannascimento'+String.valueOf(i)+'@gmail.com';
+            contacts.add(ct);
+        }
+        insert contacts;
     }
-    public ContactTgrHndTst() {
-        Contact ct = [
-            SELECT Id, Email
+    public static Integer changeEmails(List<Contact> contacts) {
+        Integer sumCounter = 0;
+        Integer i = 0;
+        for (Contact ct : contacts) {
+            ct.Email = 'yannascimento'+String.valueOf(i)+'@gmail.com';
+            if (ct.Counter__c == null) {
+                ct.Counter__c = 0;
+            }
+            ct.Counter__c += 1;
+            sumCounter += (Integer)ct.Counter__c;
+            i++;
+        }
+        update contacts;
+        return sumCounter;
+    }
+    @isTest
+    public static void IncrementCounterTst() {
+        List<Contact> contacts = [
+            SELECT Id, Email, Counter__c
             FROM Contact
-            WHERE Email = 'yannascimento@gmail.com'
+            LIMIT 3
         ];
-        System.assertEquals('yannascimento@gmail.com', ct.Email);
-        ct.Email = 'yannunes112@gmail.com';
-        update ct;
+        Test.startTest();
+        Integer sumCounter = changeEmails(contacts);
+        System.assertEquals(3, sumCounter);
+        sumCounter = changeEmails(contacts);
+        System.assertEquals(6, sumCounter);
+        Test.stopTest();
+
     }
 }

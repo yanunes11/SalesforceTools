@@ -22,6 +22,11 @@ public with sharing class SendEmail {
             mail.setTemplateId(et.id);
             mails.add(mail);
         }
-        Messaging.sendEmail(mails);
+        Messaging.SendEmailResult[] results = Messaging.sendEmail(mails);
+        for (Messaging.SendEmailResult mr : results) {
+            if (!mr.isSuccess()) {
+
+            }
+        }
     }
 }

@@ -10,15 +10,17 @@ public with sharing class QueueableCounter implements Queueable {
         this.contacts = records;
     }
     public void execute(QueueableContext qc) {
-        Contact ctQuery = [
+        List<Contact> ctQuery = [
             SELECT Id, Counter__c
             FROM Contact
             WHERE Id IN :contacts
         ];
-        if (ctQuery.Counter__c == null) {
-            ctQuery.Counter__c = 0;
+        for (Contact ct : ctQuery) {
+            if (ct.Counter__c == null) {
+                ct.Counter__c = 0;
+            }
+            ct.Counter__c = ct.Counter__c + 1;
         }
-        ctQuery.Counter__c = ctQuery.Counter__c + 1;
         Database.update(ctQuery);
     }
 }
