@@ -22,5 +22,6 @@ public with sharing class SendEmail {
             mail.setTemplateId(et.id);
             mails.add(mail);
         }
+        Messaging.sendEmail(mails);
     }
 }
