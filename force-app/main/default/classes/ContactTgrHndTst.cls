@@ -35,10 +35,8 @@ public with sharing class ContactTgrHndTst {
         Test.stopTest();
         Integer sumCounter = 0;
         for (i = 0; i < contacts.size(); i++) {
-            System.debug('contactList[i].Email: '+oldContacts[i].Email+ 'contacts[i].Email: '+contacts[i].Email);
             if (oldContacts[i].Email != contacts[i].Email) {
                 sumCounter += 1;
-                System.debug('true');
             }
         }
         System.assertEquals(contacts.size(), sumCounter);

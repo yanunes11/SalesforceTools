@@ -11,7 +11,7 @@ public with sharing class ContactTgrHnd {
         List<Id> ids = new List<Id>();
         List<Contact> contactList = new List<Contact>();
         for (String ct : oldMapContacts.keySet()) {
-            if (newMapContacts.get(ct).Email != oldMapContacts.get(ct).Email && newMapContacts.get(ct).Id == oldMapContacts.get(ct).Id) {
+            if (newMapContacts.get(ct).Email != oldMapContacts.get(ct).Email) {
                 ids.add(newMapContacts.get(ct).Id);
                 contactList.add(newMapContacts.get(ct));
             }
