@@ -1,6 +1,6 @@
 /**
     @author : Yan Nascimento
-    @description : future method
+    @description : method to invoke a future and queueable method to:
         1. Notify a Contact that his email has been changed
         2. Increment a count field when an email is sent
     @log : 02/01/2022 : creation

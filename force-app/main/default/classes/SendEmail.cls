@@ -1,6 +1,6 @@
 /**
     @author : Yan Nascimento
-    @description : different ways of sending email
+    @description : different ways to send email
     @log : 02/01/2022 : creation
  */
 

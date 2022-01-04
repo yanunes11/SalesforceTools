@@ -13,7 +13,7 @@ public with sharing class ContactTgrHndTst {
         insert contacts;
     }
     @isTest
-    public static void IncrementCounterTst() {
+    public static void IncrementCounterAndSendEmailTst() {
         List<Contact> contacts = [
             SELECT Id, Email, Counter__c
             FROM Contact

@@ -1,6 +1,6 @@
 /**
     @author : Yan Nascimento
-    @description : queueable method the increments a Counter Field the contact email has changed
+    @description : queueable method that increments a Counter Field on the contact when an email is changed
     @log : 03/01/2022 : creation
  */
 
