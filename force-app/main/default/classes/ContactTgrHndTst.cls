@@ -12,21 +12,6 @@ public with sharing class ContactTgrHndTst {
         }
         insert contacts;
     }
-    public static Integer changeEmails(List<Contact> contacts) {
-        Integer sumCounter = 0;
-        Integer i = 0;
-        for (Contact ct : contacts) {
-            ct.Email = 'yannascimento'+String.valueOf(i)+'@gmail.com';
-            if (ct.Counter__c == null) {
-                ct.Counter__c = 0;
-            }
-            ct.Counter__c += 1;
-            sumCounter += (Integer)ct.Counter__c;
-            i++;
-        }
-        update contacts;
-        return sumCounter;
-    }
     @isTest
     public static void IncrementCounterTst() {
         List<Contact> contacts = [
@@ -34,12 +19,28 @@ public with sharing class ContactTgrHndTst {
             FROM Contact
             LIMIT 3
         ];
+        //ATTENTION: you need to query twice to compare at the end on the assertEquals the old and new value 
+        List<Contact> oldContacts = [
+            SELECT Id, Email, Counter__c
+            FROM Contact
+            LIMIT 3
+        ];
         Test.startTest();
-        Integer sumCounter = changeEmails(contacts);
-        System.assertEquals(3, sumCounter);
-        sumCounter = changeEmails(contacts);
-        System.assertEquals(6, sumCounter);
+        Integer i = 3;
+        for (Contact ct : contacts) {
+            ct.Email = 'yannascimento'+String.valueOf(i)+'@gmail.com';
+            i++;
+        }
+        update contacts;
         Test.stopTest();
-
+        Integer sumCounter = 0;
+        for (i = 0; i < contacts.size(); i++) {
+            System.debug('contactList[i].Email: '+oldContacts[i].Email+ 'contacts[i].Email: '+contacts[i].Email);
+            if (oldContacts[i].Email != contacts[i].Email) {
+                sumCounter += 1;
+                System.debug('true');
+            }
+        }
+        System.assertEquals(contacts.size(), sumCounter);
     }
 }

@@ -7,19 +7,23 @@
  */
 
 public with sharing class ContactTgrHnd {
-    public static void sendEmail(Map<Id, Contact> contacts, Map<Id, Contact> oldMapContacts) {
+    public static void sendEmail(Map<Id, Contact> newMapContacts, Map<Id, Contact> oldMapContacts) {
         List<Id> ids = new List<Id>();
         List<Contact> contactList = new List<Contact>();
         for (String ct : oldMapContacts.keySet()) {
-            if (contacts.get(ct).Email != oldMapContacts.get(ct).Email && contacts.get(ct).Id == oldMapContacts.get(ct).Id) {
-                ids.add(contacts.get(ct).Id);
-                contactList.add(contacts.get(ct));
+            if (newMapContacts.get(ct).Email != oldMapContacts.get(ct).Email && newMapContacts.get(ct).Id == oldMapContacts.get(ct).Id) {
+                ids.add(newMapContacts.get(ct).Id);
+                contactList.add(newMapContacts.get(ct));
             }
         }
         //Send email to the Contact
-        SendEmail.massEmailing(ids);
+        if (ids.size() > 0) {
+            SendEmail.massEmailing(ids);
+        }
         //Increment the Counter Field
-        QueueableCounter updateJob = new QueueableCounter(contactList);
-        ID jobID = System.enqueueJob(updateJob);
+        if (contactList.size() > 0) {
+            QueueableCounter updateJob = new QueueableCounter(contactList);
+            ID jobID = System.enqueueJob(updateJob);
+        }
     }   
 }
