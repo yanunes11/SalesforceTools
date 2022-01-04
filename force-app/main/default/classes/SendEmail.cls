@@ -16,8 +16,10 @@ public with sharing class SendEmail {
         ];
         List<Messaging.MassEmailMessage> mails = new List<Messaging.MassEmailMessage>();
         for (Id IdSing : ids) {
+            List<Id> idsToList = new List<Id>();
+            idsToList.add(IdSing);
             Messaging.MassEmailMessage mail = new Messaging.MassEmailMessage();
-            mail.setTargetObjectIds(ids);
+            mail.setTargetObjectIds(idsToList);
             mail.setSenderDisplayName('System Admin');
             mail.setTemplateId(et.id);
             mails.add(mail);
