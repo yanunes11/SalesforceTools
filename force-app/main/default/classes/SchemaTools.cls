@@ -83,7 +83,7 @@ public class SchemaTools {
             }
         }
     }
-    //retrieve object list and show the in a Sleect options VF page
+    //retrieve object list and show the in a Selected options VF page
     public List<SelectOption> getObjNames() {
         List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('--None--','--None--'));
@@ -130,7 +130,7 @@ public class SchemaTools {
         }
         system.debug('Required Fields: '+requiredFieldsList);
     }
-
+    //Create values to all writeable fields accordingly to the field type
     public static void insertIntoCustomObject(string customObjectName) {
         Map<String, Object> fieldvalues = new Map<String, Object>();
         fieldValues.put(String.valueOf(Schema.DisplayType.STRING), 'nascilead');
@@ -138,8 +138,35 @@ public class SchemaTools {
         fieldValues.put(String.valueOf(Schema.DisplayType.INTEGER), 0);
         fieldValues.put(String.valueOf(Schema.DisplayType.PHONE), '+5585994568345');
         fieldValues.put(String.valueOf(Schema.DisplayType.DATE), Date.today());
-        Map<String, Schema.SObjectField> objectFields = Schema.getGlobalDescribe().get(customObjectName).getDescribe().fields.getMap();
+        
+        Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+        Schema.SObjectType leadSchema = schemaMap.get(customObjectName);
+        Map<String, Schema.SObjectField> fieldMap = leadSchema.getDescribe().fields.getMap();
         Sobject anySObject = Schema.getGlobalDescribe().get(customObjectName).getDescribe().getSObjectType().newSObject();
+        //system.debug('leadSchema: '+fieldMap);
+        for (String fieldName: fieldMap.keySet()) {
+            //get all the picklist fields label for Lead Object
+            String fieldLabel = fieldMap.get(fieldName).getDescribe().getName();
+            //system.debug('>>>fieldValueName: '+fieldLabel); show field label
+            List<Schema.PicklistEntry> fieldValue = fieldMap.get(fieldName).getDescribe().getPicklistValues();
+            List<String> strList = new List<String>();
+            if (String.valueOf(fieldMap.get(fieldName).getDescribe().getType()) == 'PICKLIST') {
+                for (Schema.PicklistEntry pe : fieldValue) {
+                    if (fieldValue.size() > 0) {
+                        //system.debug('fieldValue: '+pe.getValue()); //show the field values
+                        strList.add(pe.getValue());
+                    }
+                }
+            }
+            if (strList.size() > 0) {
+                anySObject.put(fieldLabel, strList[0]);
+            }
+        }
+        //show all the key and values:
+        // for (String key : fieldValues.KeySet()) {
+        //     system.debug('key: '+key.toUpperCase()+ ' value: '+fieldValues.get(key));
+        // }
+        Map<String, Schema.SObjectField> objectFields = Schema.getGlobalDescribe().get(customObjectName).getDescribe().fields.getMap();
         
         for (String key: objectFields.keySet()) {
             Schema.SObjectField field = objectFields.get(key);
@@ -150,6 +177,7 @@ public class SchemaTools {
             }
         }
         system.debug('SObject' + anySObject);
-        Database.insert(anySObject);
+        
+        //Database.insert(anySObject);
     }
 }
