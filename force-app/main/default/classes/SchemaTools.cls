@@ -1,11 +1,11 @@
 /*
     * @author : Yan Nascimento
-    * @Date : 18/09/2021
     * @Description : use schema methods
     * @log : 18/09/2021 - created
+    * @log : 12/01/2021 - update (insertIntoCustomObject created)
 */
 
-public class testSchemaMode {
+public class SchemaTools {
     //display the object name and its fields
     public static void basicSchema() {
         List<schema.SObjectType> gd = schema.getGlobalDescribe().values();
@@ -15,16 +15,15 @@ public class testSchemaMode {
     }
     //retrieve the field names of an Object
     public static void retrieveFieldName() {
-	List<String> addrLayout = new List<String>();
-	Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
-	Schema.SObjectType leadSchema = schemaMap.get('OpportunityServiceItem__c');
-	Map<String, Schema.SObjectField> fieldMap = leadSchema.getDescribe().fields.getMap();
-	for (String fieldName: fieldMap.keySet()) {  
-	    addrLayout.add(fieldMap.get(fieldName).getDescribe().getLabel());
-	}
-	system.debug(addrLayout);
+        List<String> addrLayout = new List<String>();
+        Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+        Schema.SObjectType leadSchema = schemaMap.get('OpportunityServiceItem__c');
+        Map<String, Schema.SObjectField> fieldMap = leadSchema.getDescribe().fields.getMap();
+        for (String fieldName: fieldMap.keySet()) {  
+            addrLayout.add(fieldMap.get(fieldName).getDescribe().getLabel());
+        }
+        system.debug(addrLayout);
     }
-
     //show all the fields a specific object.you just need to replace the account with the other object
     public static void showAllFieldsOfObject() {
         schema.DescribeSObjectResult a_desc = Account.sObjectType.getDescribe();
@@ -130,5 +129,27 @@ public class testSchemaMode {
             }
         }
         system.debug('Required Fields: '+requiredFieldsList);
+    }
+
+    public static void insertIntoCustomObject(string customObjectName) {
+        Map<String, Object> fieldvalues = new Map<String, Object>();
+        fieldValues.put(String.valueOf(Schema.DisplayType.STRING), 'nascilead');
+        fieldValues.put(String.valueOf(Schema.DisplayType.EMAIL), 'yanlead@gmail.com');
+        fieldValues.put(String.valueOf(Schema.DisplayType.INTEGER), 0);
+        fieldValues.put(String.valueOf(Schema.DisplayType.PHONE), '+5585994568345');
+        fieldValues.put(String.valueOf(Schema.DisplayType.DATE), Date.today());
+        Map<String, Schema.SObjectField> objectFields = Schema.getGlobalDescribe().get(customObjectName).getDescribe().fields.getMap();
+        Sobject anySObject = Schema.getGlobalDescribe().get(customObjectName).getDescribe().getSObjectType().newSObject();
+        
+        for (String key: objectFields.keySet()) {
+            Schema.SObjectField field = objectFields.get(key);
+            Schema.DescribeFieldResult dfr = field.getDescribe();
+            Object fieldValue = fieldvalues.get(String.valueOf(dfr.getType()));
+            if (fieldValue != null && dfr.isCreateable()) {
+                anySObject.put(field, fieldValue);
+            }
+        }
+        system.debug('SObject' + anySObject);
+        Database.insert(anySObject);
     }
 }
