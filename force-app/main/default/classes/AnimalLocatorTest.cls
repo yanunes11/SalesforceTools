@@ -7,7 +7,7 @@ public with sharing class AnimalLocatorTest {
         // This causes a fake response to be sent
         // from the class that implements HttpCalloutMock. 
         String response = AnimalLocator.getAnimalNameById(1);
-        String expectedValue = 'fluffy bunny';
+        String expectedValue = 'chicken';
         System.assertEquals(expectedValue, response);
     }
 }
