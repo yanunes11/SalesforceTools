@@ -129,4 +129,22 @@ public class creatingRecords {
             system.debug('It Worked to insert ' +addContact.size()+ ' Leads');
         }
     }
+
+    //if you need a script to create new objects from a excel file, for example:
+    // Contact ct = new Contact(FirstName='yan', Lastname='Nasicmento');
+    public static void objectScriptCreator(String obj, List<String> str) {
+        String superString;
+        // create that list: List<String> objList = new List<String>();
+        for (String a : str) {
+            //the number 4 on a.split('superCutter', 4); is because there are 4 field to set
+            List<String> allList =  a.split('superCutter', 4);
+            //get the values from the excel file and change your fields here
+            superString += (obj+' ' +allList[0]+' = new '+obj+'(\n\tFirstName = \''+allList[1]+'\', \n\tLastName = \''+allList[2]+'\', \n\tEmail = \''+allList[3]+'\');\n');
+        }
+        for (String a : str) {
+            List<String> allList =  a.split('superCutter', 4);
+            superString += 'objList.add(' +allList[0]+');\n';
+        }
+        system.debug('superString: '+superString);
+    }
 }
