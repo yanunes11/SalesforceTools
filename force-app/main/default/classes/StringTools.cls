@@ -1,6 +1,6 @@
 /**
     @author : Yan Nascimento
-    @description : Queueabe apex to assign contacts to related accounts using clone
+    @description : get a url, brake the last / to get the Id at the end
     @log : 21/01/2021 : creation
  */
 
