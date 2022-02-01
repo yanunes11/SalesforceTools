@@ -1,11 +1,11 @@
 /*
     * @author : Yan Nascimento
-    * @Date : 18/09/2021
     * @Description : use schema methods
     * @log : 18/09/2021 - created
+    * @log : 12/01/2021 - update (insertIntoCustomObject created)
 */
 
-public class testSchemaMode {
+public class SchemaTools {
     //display the object name and its fields
     public static void basicSchema() {
         List<schema.SObjectType> gd = schema.getGlobalDescribe().values();
@@ -15,16 +15,15 @@ public class testSchemaMode {
     }
     //retrieve the field names of an Object
     public static void retrieveFieldName() {
-	List<String> addrLayout = new List<String>();
-	Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
-	Schema.SObjectType leadSchema = schemaMap.get('OpportunityServiceItem__c');
-	Map<String, Schema.SObjectField> fieldMap = leadSchema.getDescribe().fields.getMap();
-	for (String fieldName: fieldMap.keySet()) {  
-	    addrLayout.add(fieldMap.get(fieldName).getDescribe().getLabel());
-	}
-	system.debug(addrLayout);
+        List<String> addrLayout = new List<String>();
+        Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+        Schema.SObjectType leadSchema = schemaMap.get('OpportunityServiceItem__c');
+        Map<String, Schema.SObjectField> fieldMap = leadSchema.getDescribe().fields.getMap();
+        for (String fieldName: fieldMap.keySet()) {  
+            addrLayout.add(fieldMap.get(fieldName).getDescribe().getLabel());
+        }
+        system.debug(addrLayout);
     }
-
     //show all the fields a specific object.you just need to replace the account with the other object
     public static void showAllFieldsOfObject() {
         schema.DescribeSObjectResult a_desc = Account.sObjectType.getDescribe();
@@ -84,7 +83,7 @@ public class testSchemaMode {
             }
         }
     }
-    //retrieve object list and show the in a Sleect options VF page
+    //retrieve object list and show the in a Selected options VF page
     public List<SelectOption> getObjNames() {
         List<SelectOption> options = new List<SelectOption>();
         options.add(new SelectOption('--None--','--None--'));
@@ -130,5 +129,55 @@ public class testSchemaMode {
             }
         }
         system.debug('Required Fields: '+requiredFieldsList);
+    }
+    //Create values to all writeable fields accordingly to the field type
+    public static void insertIntoCustomObject(string customObjectName) {
+        Map<String, Object> fieldvalues = new Map<String, Object>();
+        fieldValues.put(String.valueOf(Schema.DisplayType.STRING), 'nascilead');
+        fieldValues.put(String.valueOf(Schema.DisplayType.EMAIL), 'yanlead@gmail.com');
+        fieldValues.put(String.valueOf(Schema.DisplayType.INTEGER), 0);
+        fieldValues.put(String.valueOf(Schema.DisplayType.PHONE), '+5585994568345');
+        fieldValues.put(String.valueOf(Schema.DisplayType.DATE), Date.today());
+        
+        Map<String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
+        Schema.SObjectType leadSchema = schemaMap.get(customObjectName);
+        Map<String, Schema.SObjectField> fieldMap = leadSchema.getDescribe().fields.getMap();
+        Sobject anySObject = Schema.getGlobalDescribe().get(customObjectName).getDescribe().getSObjectType().newSObject();
+        //system.debug('leadSchema: '+fieldMap);
+        for (String fieldName: fieldMap.keySet()) {
+            //get all the picklist fields label for Lead Object
+            String fieldLabel = fieldMap.get(fieldName).getDescribe().getName();
+            //system.debug('>>>fieldValueName: '+fieldLabel); show field label
+            List<Schema.PicklistEntry> fieldValue = fieldMap.get(fieldName).getDescribe().getPicklistValues();
+            List<String> strList = new List<String>();
+            if (String.valueOf(fieldMap.get(fieldName).getDescribe().getType()) == 'PICKLIST') {
+                for (Schema.PicklistEntry pe : fieldValue) {
+                    if (fieldValue.size() > 0) {
+                        //system.debug('fieldValue: '+pe.getValue()); //show the field values
+                        strList.add(pe.getValue());
+                    }
+                }
+            }
+            if (strList.size() > 0) {
+                anySObject.put(fieldLabel, strList[0]);
+            }
+        }
+        //show all the key and values:
+        // for (String key : fieldValues.KeySet()) {
+        //     system.debug('key: '+key.toUpperCase()+ ' value: '+fieldValues.get(key));
+        // }
+        Map<String, Schema.SObjectField> objectFields = Schema.getGlobalDescribe().get(customObjectName).getDescribe().fields.getMap();
+        
+        for (String key: objectFields.keySet()) {
+            Schema.SObjectField field = objectFields.get(key);
+            Schema.DescribeFieldResult dfr = field.getDescribe();
+            Object fieldValue = fieldvalues.get(String.valueOf(dfr.getType()));
+            if (fieldValue != null && dfr.isCreateable()) {
+                anySObject.put(field, fieldValue);
+            }
+        }
+        system.debug('SObject' + anySObject);
+        
+        //Database.insert(anySObject);
     }
 }
