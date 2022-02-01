@@ -1,8 +1,8 @@
 /**
     @author : Yan Nascimento
-    @date : 21/09/2021
     @description : create a samples
-    @log : 21/09/2021 : creation
+    @log : 21/09/2021 - creation
+    @log : 01/02/2022 - objectScriptCreator method created
  */
 public class creatingRecords {
     public static void creatingNewLeads(Integer numberOfLeads) {
