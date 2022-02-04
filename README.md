@@ -1,3 +1,6 @@
+# Purpose
+A lot of different usual tools to work on Salesforce developments
+
 # Classes
 1. AccountProcessor: retrieve related contats with accounts, sum the total number of relations and assign it to Account.NumberField
 2. BatchDuplicatedContacts : batch apex that merge duplicated contacts
