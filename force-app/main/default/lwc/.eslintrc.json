@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "extends": ["@salesforce/eslint-config-lwc/recommended", "prettier"],
+=======
+  "extends": ["@salesforce/eslint-config-lwc/recommended"],
+>>>>>>> 1a1447dbd92d159ec0fbc44dbe46a79778cd2a76
   "overrides": [
     {
       "files": ["*.test.js"],

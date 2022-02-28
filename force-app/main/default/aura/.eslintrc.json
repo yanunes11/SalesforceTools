@@ -1,6 +1,10 @@
 {
   "plugins": ["@salesforce/eslint-plugin-aura"],
+<<<<<<< HEAD
   "extends": ["plugin:@salesforce/eslint-plugin-aura/recommended", "prettier"],
+=======
+  "extends": ["plugin:@salesforce/eslint-plugin-aura/recommended"],
+>>>>>>> 1a1447dbd92d159ec0fbc44dbe46a79778cd2a76
   "rules": {
     "vars-on-top": "off",
     "no-unused-expressions": "off"
