@@ -1,31 +1,46 @@
 import { LightningElement, api } from 'lwc';
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
-import sendFileToAccount from '@salesforce/apex/SendFileToObject.sendFileToAccount';
+import assignDocToAccount from '@salesforce/apex/uploadFileCnt.assignDocToAccount'
 
 export default class uploadFile extends LightningElement {
-    @api
-    myRecordId;
+    @api recordId;
+    fileData = {
+        'filename': null,
+        'base64': null,
+        'recordId': null
+    }; 
+    objects;
 
-    get acceptedFormats() {
-        return ['.pdf', '.txt', '.docx'];
-    }
-
-    handleUploadFinished(event) {
-        // Get the list of uploaded files
-        const uploadedFiles = event.detail.files;
-        alert('No. of files uploaded : ' + JSON.stringify(uploadedFiles));
-        sendFileToAccount(
-            {
-                uploadedFiles:  JSON.stringify(uploadedFiles),
-                myRecordId: this.myRecordId,
+    openFileUpload(event) {
+        const file = event.target.files[0];
+        var reader = new FileReader();
+        reader.onload = () => {
+            var base64 = reader.result.split(',')[1];
+            this.fileData = {
+                'filename': file.name,
+                'base64': base64,
+                'recordId': this.recordId
             }
-        );
-        this.dispatchEvent(
-            new ShowToastEvent({
-                title: 'Success',
-                message: uploadedFiles.length + ' File(s) Updated Sucessfully: ',
-                variant: 'success',
-            }),
-        );
+            console.log(this.fileData);
+        }
+        reader.readAsDataURL(file);
+    }
+    handleClick() {
+        const {filename, base64, recordId} = this.fileData;
+        assignDocToAccount({filename, base64, recordId})
+        .then(result => {
+            this.fileData = null;
+            this.showToast(result.Title+' uploaded sucessfully');
+        })
+        .catch(error => {
+            this.showToast('error: '+error);
+        })
+    }
+    showToast(text) {
+        const toastEvent = new ShowToastEvent({
+            title: text,
+            variant: "success"
+        });
+        this.dispatchEvent(toastEvent);
     }
 }
