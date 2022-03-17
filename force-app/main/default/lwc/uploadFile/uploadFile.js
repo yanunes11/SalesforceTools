@@ -1,6 +1,6 @@
 import { LightningElement, api } from 'lwc';
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
-import assignDocToAccount from '@salesforce/apex/uploadFileCnt.assignDocToAccount'
+import assignDocToAccount from '@salesforce/apex/ContentDocument.assignDocToAccount'
 
 export default class uploadFile extends LightningElement {
     @api recordId;

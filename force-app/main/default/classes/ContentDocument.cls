@@ -4,7 +4,7 @@
      * @log: 09/03/2022
  */
 
-public with sharing class uploadFileCnt {
+public with sharing class ContentDocument {
     @AuraEnabled
     public static ContentVersion assignDocToAccount(String filename, String base64, String recordId) {
         ContentVersion cv = new ContentVersion();
