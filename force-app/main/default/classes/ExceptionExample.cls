@@ -5,7 +5,6 @@
  */
 
 public with sharing class ExceptionExample {
-    public class MyException extends Exception {}
     //when is not Account or Contact, show a notification
     public static void notMappedField(SObject obj) {
         Switch on obj {
